@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { customevalidator } from './validators/noSpaceAllow.validator';
-import { formdatamodel } from './formmodel';
+import { Education, formdatamodel } from './formmodel';
+import jsPDF from 'jspdf';
+import html2canvas from "html2canvas";
+
 
 @Component({
   selector: 'app-root',
@@ -12,6 +15,21 @@ export class AppComponent implements OnInit {
   title = 'rformpro';
   reactiveForm!: FormGroup
   formdata!:formdatamodel
+  skilldata:string[]=[]
+  frontent!:string[]
+  backend!:string[]
+  databse!:string[]
+  originalArray = ['C', 'JAVA', 'Angular', 'React', 'MongoDB', 'FireBase'];
+
+  // ngDoCheck(): void {
+  //   //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+  //   //Add 'implements DoCheck' to the class.
+  //   this.skilldata.forEach((e)=>{
+  //     console.log(e);
+      
+  //   })
+  // }
+  @ViewChild('userDetail', { static: false }) userDetail!: ElementRef;
 
   ngOnInit(): void {
     this.reactiveForm = new FormGroup({
@@ -26,11 +44,12 @@ export class AppComponent implements OnInit {
         country: new FormControl('India'),
         city: new FormControl(null, Validators.required),
         region: new FormControl(null, Validators.required),
-        postal: new FormControl(null, Validators.required)
+        postal: new FormControl(null, Validators.required),
       }),
-      skills: new FormArray([
-        new FormControl(null, Validators.required),
+      Educationsection: new FormArray([
+
       ]),
+      skills: new FormArray([]),
       experience: new FormArray([
         // new FormControl(null)
       ])
@@ -58,11 +77,40 @@ export class AppComponent implements OnInit {
     console.log(this.reactiveForm.invalid)
     this.formdata = this.reactiveForm.value
     console.log(this.formdata);
-    this.formdata.experience.forEach(e=>{
-      console.log(e);
+    // this.formdata.experience.forEach(e=>{
+    //   console.log(e);
+    // })
+    // this.formdata.skills.forEach((e1)=>{
+    //   this.skilldata.push(e1)
+    // })
+    // this.skilldata.forEach((e)=>{
       
-    })
+    // })
+
+    // this.originalArray.forEach(value => {
+    //   this.categorizeValues(value);
+    // });
+
+   
+  
     
+
+
+    // console.log(this.skilldata);
+    
+    // console.log(this.frontent);
+    // console.log(this.backend);
+    // console.log(this.databse);
+
+    
+
+    
+
+  
+
+    
+    
+  
 
 
   }
@@ -73,10 +121,14 @@ export class AppComponent implements OnInit {
 
   expform() {
     return (this.reactiveForm.get('experience') as FormArray).controls
-
+  }
+  educatiofun(){
+    return (this.reactiveForm.get('Educationsection') as FormArray).controls
   }
 
   OnAddSkills() {
+   
+    
     return (<FormArray>this.reactiveForm.get('skills')).push(new FormControl(null, Validators.required))
   }
 
@@ -91,6 +143,17 @@ export class AppComponent implements OnInit {
 
     (<FormArray>this.reactiveForm.get('experience')).push(formgroup)
   }
+
+  OnAddEduction(){
+    const eductionformgroup = new FormGroup({
+      schoolcollagename:new FormControl(null),
+      education: new FormControl(null),
+      perecentage:new FormControl(null),
+      PassingYear:new FormControl(null)
+    });
+    (<FormArray>this.reactiveForm.get('Educationsection')).push(eductionformgroup)
+  }
+
   deleteskill(index: number) {
     const controls = <FormArray>this.reactiveForm.get('skills');
     controls.removeAt(index)
@@ -98,6 +161,10 @@ export class AppComponent implements OnInit {
   ondeleteExpercience(index: number) {
     const controls = <FormArray>this.reactiveForm.get('experience');
     controls.removeAt(index)
+  }
+  onDeleteEdcation(index:number){
+    const detetecomponent = <FormArray>this.reactiveForm.get('Educationsection');
+    detetecomponent.removeAt(index)
   }
 
   OncrateUserName() {
@@ -149,5 +216,32 @@ export class AppComponent implements OnInit {
     username:username
   })
 }
-  
+
+isselected(cource:string){
+  return this.reactiveForm.get('skills')?.value.find((e:string)=>{
+    console.log(e);
+    
+  })
+
+}
+
+downloadAsPDF(): void {
+  var data = document.getElementById("userDetail");
+    html2canvas(data!).then(canvas => {
+      // Few necessary setting options
+      var imgWidth = 208;
+      var pageHeight = 295;
+      var imgHeight = (canvas.height * imgWidth) / canvas.width;
+      var heightLeft = imgHeight;
+
+      const contentDataURL = canvas.toDataURL("image/png");
+      let pdf = new jsPDF("p", "mm", "a4"); // A4 size page of PDF
+      var position = 0;
+      pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
+      pdf.save("MYPdf.pdf"); // Generated PDF
+    });
+}
+
+
+
 }

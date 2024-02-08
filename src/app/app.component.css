@@ -144,6 +144,14 @@
     border: none;
     color: white;
   }
+  .btn-delete{
+    margin: 10px 0px;
+    padding: 14px 30px;
+    border-radius: 5px;
+    background: #ff0000;
+    border: none;
+    color: white;
+  }
   .skills{
     padding: 20px 0px;
   }

@@ -86,17 +86,67 @@
       </div>
     </div>
 
+    <!-- Add Eduction Section -->
+    <div class="input-box"  style="margin-top: 50px;" formArrayName="Educationsection">
+      <h4>Add Education</h4>
+    <div class="input-box"  *ngFor="let item of educatiofun() let i = index" [formGroupName]="i">
+      <div class="experience" >
+        <label>Education {{i+1}}</label>
+        <input type="text" placeholder="School/Collage Name" formControlName="schoolcollagename" />
+        <div class="column">
+          <div class="select-box">
+            <select  formControlName="education">
+              <option>10th</option>
+              <option>Science</option>
+              <option>Commerce</option>
+              <option>Arts</option>
+              <option>BCA/MCA</option>
+              <option>BSC.it/Masc.it</option>
+            </select>
+          </div>
+          <input type="number" placeholder="Percentage %"   formControlName="perecentage"/>
+        </div>
+        <div class="column">
+          <input type="date" placeholder="Start Date"  formControlName="PassingYear"/>
+        </div>
+        <button type="button" class="btn-add-delete" (click)="onDeleteEdcation(i)">Delete Experience</button>
+      </div>
+    </div> 
+    </div>
+    <button type="button" class="btn-add-delete" (click)="OnAddEduction()" >Add Education</button>
+
+
     <!--HTML for Skills Form Array -->
      <div class="input-box" formArrayName="skills">
       <h4>Add Skills</h4>
-      <div class="column " *ngFor="let item of data() let i = index"> 
-        <input type="text" placeholder="Add Skill..."  [formControlName]="i">
+      <div class="column " *ngFor="let item of data() let i = index" > 
+        <!-- <input type="text" placeholder="Add Skill..." [formControlName]="i" > -->
+         <div class="select-box">
+            <!-- <select  [formControlName]="i">
+              <option hidden >{{item}}</option>
+              <option>C</option>
+              <option>JAVA</option>
+              <option>Angular</option>
+              <option>React</option>
+              <option>MongoDB</option>
+              <option>FireBase</option>
+            </select> -->
+            <select [formControlName]="i">
+              <option hidden>Select Skill</option>
+              <option *ngFor="let cource of originalArray">{{cource}}</option>
+            </select>
+
+          </div>
         <button type="button" class="btn-add-delete" (click)="deleteskill(i)">Delete</button><br>
       </div> 
     </div>
     <button type="button" class="btn-add-delete" (click)="OnAddSkills()">Add Skills</button>
  
+
     <!-- HTML for Experience Form Array  -->
+    <div>
+      <h4>Add Experience</h4>
+
     <div class="input-box " formArrayName="experience">
       <div class="experience" *ngFor="let exp of expform() let i = index "  [formGroupName]="i">
         <label>Experience {{i + 1}}</label>
@@ -117,18 +167,20 @@
           <input type="date" placeholder="Start Date"  formControlName="start"/>
           <input type="date" placeholder="End Date" formControlName="end" />
         </div>
-        <button type="button" class="btn-add-delete" (click)="ondeleteExpercience(i)">Delete Experience</button>
+        <button type="button" class="btn-delete" (click)="ondeleteExpercience(i)">Delete Experience</button>
       </div>
     </div> 
+  </div>
     <button type="button" class="btn-add-delete" (click)="onAddExpercience()">Add Experience</button>
 
     <input type="submit" value="Submit" class="submit-btn">
+    <button class="submit-btn" *ngIf="formdata" (click)="downloadAsPDF()">Download as PDF</button>
      <!-- [disabled]="!reactiveForm.valid" -->
   </form>
 </section>
 
 <!-- uncomment below HTML for displaying form data--> 
-<section class="user-detail-container" *ngIf="formdata">
+<section class="user-detail-container" *ngIf="formdata" id=userDetail>
   <div class="container">
     <div class="user-details-container">
       <div class="user-avatar"> 
@@ -138,21 +190,44 @@
         <div class="user-name">
           <h2>{{ formdata.firstname }} {{formdata.lastname}}</h2>
         </div>
-        <p><b>Email:</b> {{ formdata.email }}</p>
-        <p><b>Username:</b> {{ formdata.username }}</p>
-        <p><b>Date of birth:</b> {{ formdata.dob }}</p>
+        <p><b>📧 Email:</b> {{ formdata.email }}</p>
+        <p><b>👤Username:</b> {{ formdata.username }}</p>
+        <p><b>🎂 Date of birth:</b> {{ formdata.dob }}</p>
         <div class="user-name">
           <h3>Address</h3>
         </div>
         <p>🏡 {{ formdata.address?.country }}, {{ formdata.address?.city }}, {{ formdata.address?.region }}, {{ formdata.address?.postal }}</p>
         <hr>
         <div class="user-name">
-          <h3>Skills</h3>
+          <h3>👩‍💻 Skills</h3>
         </div>
         <ul>
           <li *ngFor="let skill of formdata.skills">{{ skill }}</li>
         </ul>
         <hr>
+        <div class="user-name">
+          <h3>🏫 Education</h3>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>school/Collage Name</th>
+              <th>Cource/Streem</th>
+              <th>Percentage</th>
+              <th>Passing Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of formdata.Educationsection; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.schoolcollagename }}</td>
+              <td>{{ item.education }}</td>
+              <td>{{ item.perecentage }}</td>
+              <td>{{ item.PassingYear }}</td>
+            </tr>
+          </tbody>
+        </table>
         <div class="user-name">
           <h3>Experience</h3>
         </div>
@@ -181,6 +256,9 @@
       </div>
     </div>
   </div>
+  
 </section>
+
+
 
 

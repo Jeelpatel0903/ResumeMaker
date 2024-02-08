@@ -8,6 +8,8 @@ export class formdatamodel{
     address:  Address | null = null
     skills:string[]=[]
     experience: experienceclass[]=[]
+    Educationsection: Education[]=[]
+
 }
 
 export class Address{
@@ -24,4 +26,11 @@ export class experienceclass {
     totalexp:string | null = null
     start: Date | null = null
     end: Date | null = null
+}
+
+export class Education {
+schoolcollagename: string | null = null
+education : string | null = null
+perecentage : number  | null = null
+PassingYear :  Date | null = null
 }
